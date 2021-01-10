@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const user = new User({
-    name: 'user1',
-    password: 'pass1',
+    username: req.body.username,
+    password: req.body.password,
   });
 
   user.save().then((savedUser) => res.json(savedUser));
