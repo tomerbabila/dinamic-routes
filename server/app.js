@@ -9,8 +9,6 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 
-app.use('/', (req, res) => {
-  res.send('hello world');
-});
+app.use('/api', require('./api'));
 
 module.exports = app;
