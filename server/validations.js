@@ -16,13 +16,6 @@ const userSchema = Joi.object({
         'Password has to be least 5 characters and contain alphanumeric only.'
       )
     ),
-  email: Joi.string()
-    .email({
-      minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] },
-    })
-    .required()
-    .error(() => Error('Invalid email.')),
 });
 
 module.exports = userSchema;

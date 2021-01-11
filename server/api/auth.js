@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const auth = require('../middlewares/auth');
 
 const router = Router();
 
@@ -13,12 +12,11 @@ const saltRounds = 10;
 // Register
 router.post('/register', (req, res) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, password } = req.body;
 
     const newUser = new User({
       username,
       password: bcrypt.hashSync(password, saltRounds),
-      email,
     });
 
     const { error } = userSchema.validate(req.body);
@@ -41,10 +39,10 @@ router.post('/login', (req, res) => {
 
     userIsExist(username).then((existUser) => {
       if (!existUser) res.status(400).json('Wrong username or password.');
-      
+
       bcrypt.compare(password, existUser.password).then((match) => {
         if (!match) res.status(400).json('Wrong username or password.');
-        
+
         const token = jwt.sign({ username }, process.env.JWT_SECRET, {
           expiresIn: '24h',
         });
