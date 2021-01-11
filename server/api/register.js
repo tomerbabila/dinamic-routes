@@ -5,14 +5,10 @@ const router = Router();
 const User = require('../models/user');
 const userSchema = require('../validations');
 
-router.get('/', (req, res) => {
-  res.json('register');
-});
-
 router.post('/', (req, res) => {
   try {
     const { username, password, email } = req.body;
-    
+
     const newUser = new User({
       username,
       password,

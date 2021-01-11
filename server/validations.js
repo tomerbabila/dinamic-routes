@@ -12,7 +12,9 @@ const userSchema = Joi.object({
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     .required()
     .error(() =>
-      Error('Password has to be least 5 and contain alphanumeric only.')
+      Error(
+        'Password has to be least 5 characters and contain alphanumeric only.'
+      )
     ),
   email: Joi.string()
     .email({

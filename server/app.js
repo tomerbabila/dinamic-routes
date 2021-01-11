@@ -10,13 +10,15 @@ app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 
+mongoose.set('useFindAndModify', false);
+
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then((result) => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB.');
   })
   .catch((error) => {
     console.log('Error connecting to MongoDB:', error.message);

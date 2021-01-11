@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
+// Encrypting the password for the database
 userSchema.pre('save', function (next) {
   try {
     const salt = bcrypt.genSaltSync(10);
