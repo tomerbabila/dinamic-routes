@@ -43,9 +43,7 @@ router.post('/login', (req, res) => {
       bcrypt.compare(password, existUser.password).then((match) => {
         if (!match) res.status(400).json('Wrong username or password.');
 
-        const token = jwt.sign({ username }, process.env.JWT_SECRET, {
-          expiresIn: '24h',
-        });
+        const token = generateAccessToken({ username });
         return res.json({ token });
       });
     });
@@ -62,6 +60,10 @@ const userIsExist = async (username) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+const generateAccessToken = (user) => {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h' });
 };
 
 module.exports = router;
