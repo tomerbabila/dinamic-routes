@@ -23,7 +23,7 @@ router.post('/register', (req, res) => {
     const { error } = userSchema.validate(req.body);
     if (error) res.status(400).json({ error: error.message });
 
-    userIsExist(username).then((existUser) =>
+    isUserExist(username).then((existUser) =>
       existUser
         ? res.status(409).json('Username already exists.')
         : newUser.save().then((savedUser) => res.json(savedUser))
@@ -63,6 +63,25 @@ router.post('/login', (req, res) => {
         }
         res.json({ accessToken, refreshToken });
       }).catch((error) => res.status(400).json('Wrong password.'));
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create new token by refresh token
+router.post('/token', async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (token == null) res.status(401).json('Token not exists.');
+
+    const refreshToken = await RefreshToken.findOne({ token });
+    if (!refreshToken) res.status(403).json('Token not exists.');
+    
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+      if (error) res.status(403).json('Token is not valid.');
+      const accessToken = generateAccessToken({ username: user.username });
+      res.json({ accessToken });
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
