@@ -88,6 +88,18 @@ router.post('/token', async (req, res) => {
   }
 });
 
+// Logout
+router.delete('/logout', async (req, res) => {
+  try {
+    const { token } = req.body;
+    const deletedToken = await RefreshToken.findOneAndDelete({ token });
+    if (!deletedToken) res.status(400).json('Refresh Token is required.');
+    res.status(204).json('Token deleted successfully.');
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Check if user exists in the DB
 const isUserExist = async (username) => {
   try {
