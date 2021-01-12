@@ -6,6 +6,7 @@ const router = Router();
 
 const User = require('../models/user');
 const userSchema = require('../validations');
+const RefreshToken = require('../models/refreshToken');
 
 const saltRounds = 10;
 
@@ -20,7 +21,7 @@ router.post('/register', (req, res) => {
     });
 
     const { error } = userSchema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.message });
+    if (error) res.status(400).json({ error: error.message });
 
     userIsExist(username).then((existUser) =>
       existUser
@@ -37,23 +38,39 @@ router.post('/login', (req, res) => {
   try {
     const { username, password } = req.body;
 
-    userIsExist(username).then((existUser) => {
-      if (!existUser) res.status(400).json('Wrong username or password.');
+    isUserExist(username).then((existUser) => {
+      if (!existUser) res.status(400).json('Username not exists.');
 
-      bcrypt.compare(password, existUser.password).then((match) => {
-        if (!match) res.status(400).json('Wrong username or password.');
+      bcrypt.compare(password, existUser.password).then(async (match) => {
+        const accessToken = generateAccessToken({ username });
+        const refreshToken = jwt.sign(
+          { username },
+          process.env.REFRESH_TOKEN_SECRET
+        );
 
-        const token = generateAccessToken({ username });
-        return res.json({ token });
-      });
+        const isTokenExist = await RefreshToken.findOne({ username });
+        if (!isTokenExist) {
+          const newRefreshToken = new RefreshToken({
+            token: refreshToken,
+            username,
+          });
+          await newRefreshToken.save();
+        } else {
+          await RefreshToken.findOneAndUpdate(
+            { username },
+            { token: refreshToken }
+          );
+        }
+        res.json({ accessToken, refreshToken });
+      }).catch((error) => res.status(400).json('Wrong password.'));
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Check if user is in the DB
-const userIsExist = async (username) => {
+// Check if user exists in the DB
+const isUserExist = async (username) => {
   try {
     const user = await User.findOne({ username });
     return user ? user : false;
@@ -62,6 +79,7 @@ const userIsExist = async (username) => {
   }
 };
 
+// Generate access token
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '24h' });
 };
