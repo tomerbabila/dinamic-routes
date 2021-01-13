@@ -1,23 +1,22 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Authentication with jwt and add dynamic routes",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx nodemon index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tomerbabila/chaty.git"
+    "url": "git+https://github.com/tomerbabila/dynamic-routes.git"
   },
   "author": "Tomer Babila",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tomerbabila/chaty/issues"
+    "url": "https://github.com/tomerbabila/dynamic-routes/issues"
   },
-  "homepage": "https://github.com/tomerbabila/chaty#readme",
+  "homepage": "https://github.com/tomerbabila/dynamic-routes#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
