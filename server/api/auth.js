@@ -41,28 +41,31 @@ router.post('/login', (req, res) => {
     isUserExist(username).then((existUser) => {
       if (!existUser) res.status(400).json('Username not exists.');
 
-      bcrypt.compare(password, existUser.password).then(async (match) => {
-        const accessToken = generateAccessToken({ username });
-        const refreshToken = jwt.sign(
-          { username },
-          process.env.REFRESH_TOKEN_SECRET
-        );
-
-        const isTokenExist = await RefreshToken.findOne({ username });
-        if (!isTokenExist) {
-          const newRefreshToken = new RefreshToken({
-            token: refreshToken,
-            username,
-          });
-          await newRefreshToken.save();
-        } else {
-          await RefreshToken.findOneAndUpdate(
+      bcrypt
+        .compare(password, existUser.password)
+        .then(async (match) => {
+          const accessToken = generateAccessToken({ username });
+          const refreshToken = jwt.sign(
             { username },
-            { token: refreshToken }
+            process.env.REFRESH_TOKEN_SECRET
           );
-        }
-        res.json({ accessToken, refreshToken });
-      }).catch((error) => res.status(400).json('Wrong password.'));
+
+          const isTokenExist = await RefreshToken.findOne({ username });
+          if (!isTokenExist) {
+            const newRefreshToken = new RefreshToken({
+              token: refreshToken,
+              username,
+            });
+            await newRefreshToken.save();
+          } else {
+            await RefreshToken.findOneAndUpdate(
+              { username },
+              { token: refreshToken }
+            );
+          }
+          res.json({ accessToken, refreshToken });
+        })
+        .catch((error) => res.status(400).json('Wrong password.'));
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -77,7 +80,7 @@ router.post('/token', async (req, res) => {
 
     const refreshToken = await RefreshToken.findOne({ token });
     if (!refreshToken) res.status(403).json('Token not exists.');
-    
+
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
       if (error) res.status(403).json('Token is not valid.');
       const accessToken = generateAccessToken({ username: user.username });
