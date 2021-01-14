@@ -88,18 +88,13 @@ router.post('/token', async (req: Request, res: Response) => {
     });
     if (!refreshToken) res.status(403).json('Token not exists.');
 
-    jwt.verify(
-      token,
-      process.env.REFRESH_TOKEN_SECRET!,
-      // @ts-ignore
-      (error, user) => {
-        if (error) res.status(403).json('Token is not valid.');
-        const accessToken: string = generateAccessToken({
-          username: user.username,
-        });
-        res.json({ accessToken });
-      }
-    );
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!, (err, decoded) => {
+      if (err) res.status(403).json('Token is not valid.');
+      const accessToken: string = generateAccessToken({
+        username: decoded.username,
+      });
+      res.json({ accessToken });
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
