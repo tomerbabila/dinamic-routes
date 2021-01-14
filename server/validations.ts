@@ -1,6 +1,6 @@
-const Joi = require('joi');
+import Joi from "joi";
 
-const userSchema = Joi.object({
+export const userSchema = Joi.object({
   username: Joi.string()
     .alphanum()
     .min(5)
@@ -17,5 +17,3 @@ const userSchema = Joi.object({
       )
     ),
 });
-
-module.exports = userSchema;
