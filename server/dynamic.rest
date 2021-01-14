@@ -1,0 +1,4 @@
+### First route
+GET http://localhost:8080/api/dynamicRoutes HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNjEwNjYzMTU2LCJleHAiOjE2MTA2NjY3NTZ9.B5t_V1HQT_ib1gfd1rgIdreb4NurpVgu3hLkcCpXwdE

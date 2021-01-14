@@ -1,0 +1,37 @@
+### Register
+
+POST http://localhost:8080/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "user1",
+    "password": "pass1"
+}
+
+### Login
+
+POST http://localhost:8080/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "user1",
+    "password": "pass1"
+}
+
+### Generate access token
+
+POST http://localhost:8080/api/auth/token HTTP/1.1
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNjEwNjI0MzE2fQ.uV0-xf9Bs2a8RLYGnKGSWLC2m5Q0PTOqoK4DNzYbwaU"
+}
+
+###
+
+DELETE http://localhost:8080/api/auth/logout HTTP/1.1
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNjEwNjI1MTg0fQ.YscWEL4uhpzsR3Sn37K9tRwKWYk5SkJsBI2uG2eEKpQ"
+}

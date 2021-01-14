@@ -109,6 +109,7 @@ router.delete('/logout', async (req: Request, res: Response) => {
       { token }
     );
     if (!deletedToken) res.status(400).json('Refresh Token is required.');
+
     res.status(204).json('Token deleted successfully.');
   } catch (error) {
     res.status(500).json({ error: error.message });

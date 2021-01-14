@@ -1,5 +1,4 @@
 import { Document } from 'mongoose';
-import { Request } from 'express';
 
 export interface IUser extends Document {
   username: string;
@@ -11,6 +10,10 @@ export interface IRefreshToken extends Document {
   token: string;
 }
 
-export interface costumeRequest extends Request {
-  decoded: object | undefined;
+declare global {
+  namespace Express {
+    interface Request {
+      decoded: object | undefined;
+    }
+  }
 }

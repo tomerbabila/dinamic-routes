@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { Response, NextFunction } from 'express';
-import { costumeRequest } from '../types';
+import { Request, Response, NextFunction } from 'express';
 
-const checkToken = (req: costumeRequest, res: Response, next: NextFunction): void => {
+const checkToken = (req: Request, res: Response, next: NextFunction): void => {
   // Express headers are auto converted to lowercase
   const authHeader: string | undefined = req.headers['authorization'];
   const token: string | undefined = authHeader && authHeader.split(' ')[1];
@@ -18,4 +17,4 @@ const checkToken = (req: costumeRequest, res: Response, next: NextFunction): voi
   }
 };
 
-module.exports = checkToken;
+export default checkToken;
