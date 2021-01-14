@@ -81,7 +81,7 @@ router.post('/login', (req: Request, res: Response) => {
 router.post('/token', async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
-    if (token == null) res.status(401).json('Token is required.');
+    if (token === null) res.status(401).json('Token is required.');
 
     const refreshToken: IRefreshToken | null = await RefreshToken.findOne({
       token,
@@ -90,6 +90,7 @@ router.post('/token', async (req: Request, res: Response) => {
 
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!, (err, decoded) => {
       if (err) res.status(403).json('Token is not valid.');
+
       const accessToken: string = generateAccessToken({
         username: decoded.username,
       });
