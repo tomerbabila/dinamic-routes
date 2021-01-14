@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import RefreshToken from '../models/refreshToken';
 import User from '../models/user';
 import { userSchema } from '../validations';
-import { IUser, IRefreshToken, userType } from '../types';
+import { IUser, IRefreshToken } from '../types';
 
 const router: Router = Router();
 
@@ -92,7 +92,7 @@ router.post('/token', async (req: Request, res: Response) => {
       token,
       process.env.REFRESH_TOKEN_SECRET!,
       // @ts-ignore
-      (error, user): void => {
+      (error, user) => {
         if (error) res.status(403).json('Token is not valid.');
         const accessToken: string = generateAccessToken({
           username: user.username,
