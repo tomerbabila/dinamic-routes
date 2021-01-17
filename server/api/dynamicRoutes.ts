@@ -68,11 +68,11 @@ router.delete('/', (req: Request, res: Response) => {
 
     // Get all routes in an array
     const routes = router.stack;
-    console.log(routes);
-    routes.forEach((route: any, i: number, routes: any) =>
+    // Check every route and remove the chosen one
+    routes.forEach((route: any, i: number) =>
       removeRoute(route, i, routes, method, path)
     );
-    return res.json(`'${path}' removed.`);
+    return res.json(`'${path}' route removed.`);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -81,8 +81,8 @@ router.delete('/', (req: Request, res: Response) => {
 const getRouteKey = (method: Method, path: string) => `[${method}]${path}`;
 
 const removeRoute = (route: any, i: number, routes: any, method: Method, path: string) => {
-  const existingMock = mockHandlers[getRouteKey(method, path)];
-  if (existingMock && existingMock.path === route.path) {
+  const routeExist = mockHandlers[getRouteKey(method, path)];
+  if (routeExist && routeExist.path === route.path) {
     routes.splice(i, 1);
   }
 };
