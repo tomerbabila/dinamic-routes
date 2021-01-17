@@ -58,6 +58,33 @@ router.post('/', (req: Request, res: Response) => {
   }
 });
 
+// Delete route
+router.delete('/', (req: Request, res: Response) => {
+  try {
+    const { path, method } = req.body;
+    if (!path || !method) {
+      return res.status(400).json('Path and method should be provided.');
+    }
+
+    // Get all routes in an array
+    const routes = router.stack;
+    console.log(routes);
+    routes.forEach((route: any, i: number, routes: any) =>
+      removeRoute(route, i, routes, method, path)
+    );
+    return res.json(`'${path}' removed.`);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 const getRouteKey = (method: Method, path: string) => `[${method}]${path}`;
+
+const removeRoute = (route: any, i: number, routes: any, method: Method, path: string) => {
+  const existingMock = mockHandlers[getRouteKey(method, path)];
+  if (existingMock && existingMock.path === route.path) {
+    routes.splice(i, 1);
+  }
+};
 
 export default router;
