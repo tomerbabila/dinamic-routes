@@ -8,7 +8,22 @@ let mockHandlers: any = {};
 // Get information about routes
 router.get('/', (req: Request, res: Response) => {
   try {
-    res.json(mockHandlers);
+    // Get information about specific route
+    const { method: queryMethod, path: queryPath } = req.query;
+    if (queryMethod && queryPath) {
+      const routeKey = getRouteKey(queryMethod as Method, queryPath as string);
+      if (!mockHandlers[routeKey]) res.status(403).json('Route not found.');
+
+      const { count, method, path, response } = mockHandlers[routeKey];
+      res.json({ count, method, path, response });
+    }
+    // Get information about all routes
+    res.json(
+      Object.keys(mockHandlers).map((routeKey) => {
+        const { count, method, path } = mockHandlers[routeKey];
+        return { count, method, path };
+      })
+    );
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
