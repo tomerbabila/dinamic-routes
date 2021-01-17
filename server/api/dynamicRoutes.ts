@@ -12,20 +12,22 @@ router.get('/', (req: Request, res: Response) => {
     const { method: queryMethod, path: queryPath } = req.query;
     if (queryMethod && queryPath) {
       const routeKey = getRouteKey(queryMethod as Method, queryPath as string);
-      if (!mockHandlers[routeKey]) res.status(403).json('Route not found.');
+      if (!mockHandlers[routeKey]) {
+        return res.status(403).json('Route not found.');
+      }
 
       const { count, method, path, response } = mockHandlers[routeKey];
-      res.json({ count, method, path, response });
+      return res.json({ count, method, path, response });
     }
     // Get information about all routes
-    res.json(
+    return res.json(
       Object.keys(mockHandlers).map((routeKey) => {
         const { count, method, path } = mockHandlers[routeKey];
         return { count, method, path };
       })
     );
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -34,7 +36,7 @@ router.post('/', (req: Request, res: Response) => {
   try {
     const { method, path, response }: IRoute = req.body;
     if (!method || !path || !response) {
-      res.status(400).json('Should provide: method, path and response.');
+      return res.status(400).json('Should provide: method, path and response.');
     }
 
     const newRouteKey = getRouteKey(method, path);
@@ -45,14 +47,14 @@ router.post('/', (req: Request, res: Response) => {
       response,
       middleware: (req: Request, res: Response) => {
         mockHandlers[newRouteKey].count += 1;
-        res.status(response.status || 200).json(response.body);
+        return res.status(response.status || 200).json(response.body);
       },
     };
     // Add the new route
     router[method](path, mockHandlers[newRouteKey].middleware);
-    res.json(`'${path}' route added.`);
+    return res.json(`'${path}' route added.`);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 

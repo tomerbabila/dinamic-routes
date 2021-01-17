@@ -21,7 +21,7 @@ router.post('/register', (req: Request, res: Response) => {
     });
 
     const { error } = userSchema.validate(req.body);
-    if (error) res.status(400).json({ error: error.message });
+    if (error) return res.status(400).json({ error: error.message });
 
     isUserExist(username).then((existUser) =>
       existUser
@@ -29,7 +29,7 @@ router.post('/register', (req: Request, res: Response) => {
         : newUser.save().then((savedUser) => res.json(savedUser))
     );
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -39,11 +39,11 @@ router.post('/login', (req: Request, res: Response) => {
     const { username, password } = req.body;
 
     isUserExist(username).then((existUser) => {
-      if (!existUser) res.status(400).json('Username not exists.');
+      if (!existUser) return res.status(400).json('Username not exists.');
 
       bcrypt.compare(password, existUser!.password).then(
-        async (match: boolean): Promise<void> => {
-          if (!match) res.status(400).json('Wrong password.');
+        async (match: boolean): Promise<Response> => {
+          if (!match) return res.status(400).json('Wrong password.');
 
           const accessToken: string = generateAccessToken({ username });
           const refreshToken: string = jwt.sign(
@@ -52,9 +52,7 @@ router.post('/login', (req: Request, res: Response) => {
           );
 
           const isTokenExist: IRefreshToken | null = await RefreshToken.findOne(
-            {
-              username,
-            }
+            { username }
           );
           if (!isTokenExist) {
             const newRefreshToken: IRefreshToken = new RefreshToken({
@@ -68,12 +66,12 @@ router.post('/login', (req: Request, res: Response) => {
               { token: refreshToken }
             );
           }
-          res.json({ accessToken, refreshToken });
+          return res.json({ accessToken, refreshToken });
         }
       );
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -81,23 +79,23 @@ router.post('/login', (req: Request, res: Response) => {
 router.post('/token', async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
-    if (token === null) res.status(401).json('Token is required.');
+    if (token === null) return res.status(401).json('Token is required.');
 
     const refreshToken: IRefreshToken | null = await RefreshToken.findOne({
       token,
     });
-    if (!refreshToken) res.status(403).json('Token not exists.');
+    if (!refreshToken) return res.status(403).json('Token not exists.');
 
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!, (err, decoded) => {
-      if (err) res.status(403).json('Token is not valid.');
+      if (err) return res.status(403).json('Token is not valid.');
 
       const accessToken: string = generateAccessToken({
         username: decoded.username,
       });
-      res.json({ accessToken });
+      return res.json({ accessToken });
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -108,11 +106,13 @@ router.delete('/logout', async (req: Request, res: Response) => {
     const deletedToken: IRefreshToken | null = await RefreshToken.findOneAndDelete(
       { token }
     );
-    if (!deletedToken) res.status(400).json('Refresh Token is required.');
+    if (!deletedToken) {
+      return res.status(400).json('Refresh Token is required.');
+    }
 
-    res.status(204).json('Token deleted successfully.');
+    return res.status(204).json('Token deleted successfully.');
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
