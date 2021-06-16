@@ -80,7 +80,13 @@ router.delete('/', (req: Request, res: Response) => {
 
 const getRouteKey = (method: Method, path: string) => `[${method}]${path}`;
 
-const removeRoute = (route: any, i: number, routes: any, method: Method, path: string) => {
+const removeRoute = (
+  route: any,
+  i: number,
+  routes: any,
+  method: Method,
+  path: string
+) => {
   const routeExist = mockHandlers[getRouteKey(method, path)];
   if (routeExist && routeExist.path === route.path) {
     routes.splice(i, 1);
