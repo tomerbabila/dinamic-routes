@@ -1,0 +1,37 @@
+### Create new route
+POST http://localhost:8080/api/dynamicRoutes HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM5ODA3LCJleHAiOjE2MjM4NDM0MDd9.aJsTg30kSJW-J6oAYX3LYGuMXSlYEBbqNIqfO0zmJKA
+
+{
+    "method": "get",
+    "path": "/test",
+    "response": {
+        "body": {
+            "key": "value"
+        },
+        "status": 200
+    }
+}
+
+### Go to the created route
+GET http://localhost:8080/api/dynamicRoutes/test HTTP/1.1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM5ODA3LCJleHAiOjE2MjM4NDM0MDd9.aJsTg30kSJW-J6oAYX3LYGuMXSlYEBbqNIqfO0zmJKA
+
+### Get information about specific routes
+GET http://localhost:8080/api/dynamicRoutes?method=get&path=/test HTTP/1.1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM5ODA3LCJleHAiOjE2MjM4NDM0MDd9.aJsTg30kSJW-J6oAYX3LYGuMXSlYEBbqNIqfO0zmJKA
+
+###Delete a route
+DELETE http://localhost:8080/api/dynamicRoutes HTTP/1.1
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM5ODA3LCJleHAiOjE2MjM4NDM0MDd9.aJsTg30kSJW-J6oAYX3LYGuMXSlYEBbqNIqfO0zmJKA
+
+{
+    "method": "get",
+    "path": "/test"
+}
+
+### Get information about all routes (also deleted ones)
+GET http://localhost:8080/api/dynamicRoutes HTTP/1.1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM5ODA3LCJleHAiOjE2MjM4NDM0MDd9.aJsTg30kSJW-J6oAYX3LYGuMXSlYEBbqNIqfO0zmJKA

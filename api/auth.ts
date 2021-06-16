@@ -41,8 +41,9 @@ router.post('/login', (req: Request, res: Response) => {
     isUserExist(username).then((existUser) => {
       if (!existUser) return res.status(400).json('Username not exists.');
 
-      bcrypt.compare(password, existUser!.password).then(
-        async (match: boolean): Promise<Response> => {
+      bcrypt
+        .compare(password, existUser!.password)
+        .then(async (match: boolean): Promise<Response> => {
           if (!match) return res.status(400).json('Wrong password.');
 
           const accessToken: string = generateAccessToken({ username });
@@ -67,8 +68,7 @@ router.post('/login', (req: Request, res: Response) => {
             );
           }
           return res.json({ accessToken, refreshToken });
-        }
-      );
+        });
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -103,9 +103,8 @@ router.post('/token', async (req: Request, res: Response) => {
 router.delete('/logout', async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
-    const deletedToken: IRefreshToken | null = await RefreshToken.findOneAndDelete(
-      { token }
-    );
+    const deletedToken: IRefreshToken | null =
+      await RefreshToken.findOneAndDelete({ token });
     if (!deletedToken) {
       return res.status(400).json('Refresh Token is required.');
     }
