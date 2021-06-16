@@ -24,7 +24,7 @@ POST http://localhost:8080/api/auth/token HTTP/1.1
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM3Nzg2fQ.ENQE3i6GtLbwbBfFuz3thj581fXNIa0PbuwhnMVR-Tk"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjE2Njg4ODg1fQ._3Ml5Fb2njq7sHGkXPa6tE65Wu1YAlbQxTcByuFrDv8"
 }
 
 ###
@@ -33,5 +33,5 @@ DELETE http://localhost:8080/api/auth/logout HTTP/1.1
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI1IiwiaWF0IjoxNjIzODM3Nzg2LCJleHAiOjE2MjM4NDEzODZ9.y-BtmeV3ishY7qhEC6vw2oYnoVFge9AXj9u4rrsCXC0"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNjEwNjI1MTg0fQ.YscWEL4uhpzsR3Sn37K9tRwKWYk5SkJsBI2uG2eEKpQ"
 }
